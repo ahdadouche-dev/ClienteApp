@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Net.Http;
+using System.Text;
 using ClientesApp.Domain.Models;
-using ClientesApp.Domain.Validators;
 using Newtonsoft.Json;
 
 namespace ClientesApp.Desktop.Services
 {
     public class ClienteService
     {
-        private readonly string _rutaFichero;
+        private readonly HttpClient _httpClient;
+        private const string BaseUrl = "https://localhost:7184";
 
-        public ClienteService(string rutaFichero = "clientes_store.json")
+        public ClienteService()
         {
-            _rutaFichero = rutaFichero;
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (m, c, ch, e) => true
+            };
+            _httpClient = new HttpClient(handler) { BaseAddress = new Uri(BaseUrl) };
         }
 
         public List<Cliente> CargarClientes()
         {
             try
             {
-                if (!File.Exists(_rutaFichero)) return new List<Cliente>();
-                var json = File.ReadAllText(_rutaFichero);
+                var response = _httpClient.GetAsync("/clientes").Result;
+                response.EnsureSuccessStatusCode();
+                var json = response.Content.ReadAsStringAsync().Result;
                 return JsonConvert.DeserializeObject<List<Cliente>>(json) ?? new List<Cliente>();
             }
             catch (Exception ex)
@@ -32,57 +37,56 @@ namespace ClientesApp.Desktop.Services
             }
         }
 
-        public void GuardarClientes(List<Cliente> clientes)
+        public (bool ok, List<string> errores) AgregarCliente(List<Cliente> clientes, Cliente nuevo)
         {
             try
             {
-                var json = JsonConvert.SerializeObject(clientes, Formatting.Indented);
-                File.WriteAllText(_rutaFichero, json);
+                var json = JsonConvert.SerializeObject(nuevo);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = _httpClient.PostAsync("/clientes", content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    clientes.Add(nuevo);
+                    return (true, new List<string>());
+                }
+
+                var error = response.Content.ReadAsStringAsync().Result;
+                return (false, new List<string> { error });
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error al guardar clientes: {ex.Message}");
-                throw;
+                return (false, new List<string> { ex.Message });
             }
-        }
-
-        public (bool ok, List<string> errores) AgregarCliente(List<Cliente> clientes, Cliente nuevo)
-        {
-            var (esValido, errores) = ClientValidator.Validar(nuevo);
-            if (!esValido) return (false, errores);
-
-            if (clientes.Any(c => c.Dni.Equals(nuevo.Dni, StringComparison.OrdinalIgnoreCase)))
-                return (false, new List<string> { "Ya existe un cliente con ese DNI." });
-
-            clientes.Add(nuevo);
-            GuardarClientes(clientes);
-            return (true, new List<string>());
         }
 
         public bool EliminarCliente(List<Cliente> clientes, string dni)
         {
-            var cliente = clientes.FirstOrDefault(c =>
-                c.Dni.Equals(dni, StringComparison.OrdinalIgnoreCase));
+            try
+            {
+                var response = _httpClient.DeleteAsync($"/clientes/{dni}").Result;
+                if (!response.IsSuccessStatusCode) return false;
 
-            if (cliente == null) return false;
-
-            clientes.Remove(cliente);
-            GuardarClientes(clientes);
-            return true;
+                var cliente = clientes.Find(c =>
+                    c.Dni.Equals(dni, StringComparison.OrdinalIgnoreCase));
+                if (cliente != null) clientes.Remove(cliente);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al eliminar cliente: {ex.Message}");
+                return false;
+            }
         }
 
-        public List<Cliente> ImportarDesdeJson(string rutaOrigen)
-        {
-            var json = File.ReadAllText(rutaOrigen);
-            return JsonConvert.DeserializeObject<List<Cliente>>(json) ?? new List<Cliente>();
-        }
+        public void GuardarClientes(List<Cliente> clientes) { } // La API gestiona la persistencia
 
         public List<Cliente> ImportarDesdeCsv(string rutaOrigen)
         {
             var clientes = new List<Cliente>();
-            var lineas = File.ReadAllLines(rutaOrigen);
+            var lineas = System.IO.File.ReadAllLines(rutaOrigen);
 
-            foreach (var linea in lineas.Skip(1)) // saltar cabecera
+            foreach (var linea in System.Linq.Enumerable.Skip(lineas, 1))
             {
                 var campos = linea.Split(',');
                 if (campos.Length < 6) continue;
@@ -99,6 +103,12 @@ namespace ClientesApp.Desktop.Services
             }
 
             return clientes;
+        }
+
+        public List<Cliente> ImportarDesdeJson(string rutaOrigen)
+        {
+            var json = System.IO.File.ReadAllText(rutaOrigen);
+            return JsonConvert.DeserializeObject<List<Cliente>>(json) ?? new List<Cliente>();
         }
     }
 }

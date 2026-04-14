@@ -1,3 +1,26 @@
-{
-
-}
+[
+  {
+    "Dni": "12345678A",
+    "Nombre": "Juan",
+    "Apellidos": "Garc\u00EDa L\u00F3pez",
+    "FechaNacimiento": "1990-05-15T00:00:00",
+    "Telefono": "612345678",
+    "Email": "juan@email.com"
+  },
+  {
+    "Dni": "87654321B",
+    "Nombre": "Mar\u00EDa",
+    "Apellidos": "Mart\u00EDnez Ruiz",
+    "FechaNacimiento": "1985-03-22T00:00:00",
+    "Telefono": "698765432",
+    "Email": "maria@email.com"
+  },
+  {
+    "Dni": "11223344C",
+    "Nombre": "Pedro",
+    "Apellidos": "S\u00E1nchez G\u00F3mez",
+    "FechaNacimiento": "1978-11-08T00:00:00",
+    "Telefono": "677112233",
+    "Email": "pedro@email.com"
+  }
+]
