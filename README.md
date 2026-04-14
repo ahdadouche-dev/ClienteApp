@@ -1,6 +1,6 @@
 # ClientesApp
 
-Solución compuesta por una aplicación de escritorio WinForms y una Web API REST para la gestión de clientes.
+Solución compuesta por una aplicación de escritorio WinForms y una Web API REST para la gestión de clientes. El Desktop consume la API via HTTP, por lo que ambos proyectos deben estar en ejecución simultáneamente.
 
 ## Estructura de la solución
 
@@ -9,7 +9,10 @@ ClientesApp/
 ├── ClientesApp.Domain/      # Modelos y validaciones compartidos
 ├── ClientesApp.Api/         # Web API REST (ASP.NET Core .NET 9)
 ├── ClientesApp.Desktop/     # Aplicación de escritorio (WinForms .NET Framework 4.8)
-└── ClientesApp.Tests/       # Tests unitarios (xUnit)
+├── ClientesApp.Tests/       # Tests unitarios (xUnit)
+└── ejemplos/
+    ├── clientes_prueba.csv  # Fichero CSV de ejemplo para importación
+    └── clientes_prueba.json # Fichero JSON de ejemplo para importación
 ```
 
 ---
@@ -24,20 +27,41 @@ ClientesApp/
 
 ---
 
-## Arrancar la Web API
+## Arrancar la aplicación
 
-### Desde Visual Studio
-1. Clic derecho sobre `ClientesApp.Api` → **Establecer como proyecto de inicio**
-2. Pulsa **F5** o el botón **▶**
-3. Se abrirá el navegador en `https://localhost:XXXX/swagger`
+> ⚠️ **Importante:** El Desktop consume la API via HTTP. Es obligatorio arrancar **primero la API** y luego el Desktop.
 
-### Desde terminal
+### Opción 1 — Arrancar ambos proyectos a la vez (recomendado)
+
+1. Clic derecho sobre la **Solución** en el explorador de soluciones → **Propiedades**
+2. Selecciona **"Proyectos de inicio múltiples"**
+3. Pon `ClientesApp.Api` en **Iniciar**
+4. Pon `ClientesApp.Desktop` en **Iniciar**
+5. Pulsa **Aceptar**
+6. Pulsa **F5**
+
+### Opción 2 — Arrancar manualmente cada proyecto
+
+**Paso 1 — Arrancar la API:**
 ```bash
 cd ClientesApp.Api
 dotnet run
 ```
+O desde Visual Studio: clic derecho en `ClientesApp.Api` → **Depurar → Iniciar nueva instancia**
 
-Luego abre el navegador en la URL que aparezca en la consola + `/swagger`.
+**Paso 2 — Arrancar el Desktop:**
+
+Clic derecho en `ClientesApp.Desktop` → **Depurar → Iniciar nueva instancia**
+
+---
+
+## Web API
+
+La API arranca en `https://localhost:7184`. Puedes acceder a la documentación interactiva en:
+
+```
+https://localhost:7184/swagger
+```
 
 ### Endpoints disponibles
 
@@ -61,22 +85,22 @@ Luego abre el navegador en la URL que aparezca en la consola + `/swagger`.
 ```
 
 ### Almacenamiento
-Los datos se guardan en `Data/clientes.json` dentro del directorio de la API. Se crea automáticamente si no existe.
+Los datos se guardan en `Data/clientes.json` dentro del directorio de la API. Se crea automáticamente si no existe. Si el fichero existe pero tiene contenido inválido, reemplaza su contenido con `[]`.
 
 ---
 
-## Arrancar la aplicación Desktop
+## Aplicación Desktop
 
-### Desde Visual Studio
-1. Clic derecho sobre `ClientesApp.Desktop` → **Establecer como proyecto de inicio**
-2. Pulsa **F5** o el botón **▶**
+El Desktop se conecta a la API en `https://localhost:7184`. **La API debe estar arrancada** para que el Desktop funcione correctamente.
 
 ### Funcionalidades
 - **Agregar clientes** — rellena el formulario y pulsa "Agregar"
 - **Eliminar clientes** — selecciona una fila de la tabla y pulsa "Eliminar"
-- **Importar clientes** — pulsa "Importar CSV/JSON" y selecciona un fichero
+- **Importar clientes** — pulsa "Importar CSV/JSON" y selecciona un fichero de la carpeta `ejemplos/`
 
 ### Formatos de importación
+
+Encontrarás ficheros de ejemplo en la carpeta `ejemplos/` del repositorio.
 
 **CSV** (con cabecera):
 ```
@@ -97,9 +121,6 @@ dni,nombre,apellidos,fechaNacimiento,telefono,email
   }
 ]
 ```
-
-### Persistencia
-Los datos se guardan automáticamente al cerrar la aplicación en `clientes_store.json`, ubicado en la misma carpeta que el ejecutable (`bin/Debug/`). Al volver a abrir la app se cargan automáticamente.
 
 ---
 
@@ -125,9 +146,10 @@ dotnet test
 
 | Componente | Tecnología |
 |------------|------------|
-| API | ASP.NET Core 9, Minimal API + Controllers |
+| API | ASP.NET Core 9, Controllers |
 | Desktop | WinForms .NET Framework 4.8 |
 | Dominio | .NET Standard 2.0 |
+| Comunicación Desktop↔API | HttpClient |
 | Serialización API | System.Text.Json |
 | Serialización Desktop | Newtonsoft.Json |
 | Documentación API | Swashbuckle (Swagger) |
