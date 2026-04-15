@@ -10,5 +10,6 @@ namespace ClientesApp.Domain.Models
         public DateTime FechaNacimiento { get; set; }
         public string Telefono { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public Pais Pais { get; set; } = Pais.España;
     }
 }

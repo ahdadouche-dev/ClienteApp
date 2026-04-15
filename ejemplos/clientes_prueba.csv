@@ -1,0 +1,5 @@
+dni,nombre,apellidos,fechaNacimiento,telefono,email,pais
+12345678A,Juan,García López,1990-05-15,612345678,juan@email.com,España
+87654321B,María,Martínez Ruiz,1985-03-22,698765432,maria@email.com,España
+1234567890123,Pierre,Dupont Martin,1988-07-10,0612345678,pierre@email.fr,Francia
+123456789,João,Silva Santos,1992-11-30,912345678,joao@email.pt,Portugal

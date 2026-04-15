@@ -4,21 +4,22 @@ using System.Net.Http;
 using System.Text;
 using ClientesApp.Domain.Models;
 using Newtonsoft.Json;
+using System.Configuration;
 
 namespace ClientesApp.Desktop.Services
 {
     public class ClienteService
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "https://localhost:7184";
 
         public ClienteService()
         {
+            var apiUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (m, c, ch, e) => true
             };
-            _httpClient = new HttpClient(handler) { BaseAddress = new Uri(BaseUrl) };
+            _httpClient = new HttpClient(handler) { BaseAddress = new Uri(apiUrl) };
         }
 
         public List<Cliente> CargarClientes()

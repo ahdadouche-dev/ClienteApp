@@ -1,0 +1,38 @@
+[
+  {
+    "Dni": "11223344C",
+    "Nombre": "Carlos",
+    "Apellidos": "Rodríguez Pérez",
+    "FechaNacimiento": "1978-04-20",
+    "Telefono": "677112233",
+    "Email": "carlos@email.com",
+    "Pais": "España"
+  },
+  {
+    "Dni": "44332211D",
+    "Nombre": "Ana",
+    "Apellidos": "López Fernández",
+    "FechaNacimiento": "1995-09-15",
+    "Telefono": "655443322",
+    "Email": "ana@email.com",
+    "Pais": "España"
+  },
+  {
+    "Dni": "9876543210123",
+    "Nombre": "Sophie",
+    "Apellidos": "Bernard Leroy",
+    "FechaNacimiento": "1983-12-05",
+    "Telefono": "0698765432",
+    "Email": "sophie@email.fr",
+    "Pais": "Francia"
+  },
+  {
+    "Dni": "987654321",
+    "Nombre": "Miguel",
+    "Apellidos": "Ferreira Costa",
+    "FechaNacimiento": "1991-06-18",
+    "Telefono": "961234567",
+    "Email": "miguel@email.pt",
+    "Pais": "Portugal"
+  }
+]

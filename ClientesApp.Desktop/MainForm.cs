@@ -25,6 +25,9 @@ namespace ClientesApp.Desktop
         {
             try
             {
+                cboPais.DataSource = Enum.GetValues(typeof(ClientesApp.Domain.Models.Pais));
+                cboPais.SelectedIndex = 0;
+
                 _clientes = _service.CargarClientes();
                 RefrescarGrid();
             }
@@ -59,7 +62,8 @@ namespace ClientesApp.Desktop
                     Apellidos = txtApellidos.Text.Trim(),
                     FechaNacimiento = dtpFecha.Value,
                     Telefono = txtTelefono.Text.Trim(),
-                    Email = txtEmail.Text.Trim()
+                    Email = txtEmail.Text.Trim().ToLower(),
+                    Pais = (Pais)cboPais.SelectedItem
                 };
 
                 var (ok, errores) = _service.AgregarCliente(_clientes, nuevo);

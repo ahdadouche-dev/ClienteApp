@@ -31,6 +31,8 @@
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.panelFormulario = new System.Windows.Forms.Panel();
             this.dtpFecha = new System.Windows.Forms.DateTimePicker();
+            this.lblPais = new System.Windows.Forms.Label();
+            this.cboPais = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.panelFormulario.SuspendLayout();
             this.SuspendLayout();
@@ -164,6 +166,8 @@
             // 
             // panelFormulario
             // 
+            this.panelFormulario.Controls.Add(this.cboPais);
+            this.panelFormulario.Controls.Add(this.lblPais);
             this.panelFormulario.Controls.Add(this.lblDni);
             this.panelFormulario.Controls.Add(this.txtDni);
             this.panelFormulario.Controls.Add(this.lblNombre);
@@ -191,6 +195,23 @@
             this.dtpFecha.Size = new System.Drawing.Size(150, 20);
             this.dtpFecha.TabIndex = 7;
             // 
+            // lblPais
+            // 
+            this.lblPais.AutoSize = true;
+            this.lblPais.Location = new System.Drawing.Point(463, 85);
+            this.lblPais.Name = "lblPais";
+            this.lblPais.Size = new System.Drawing.Size(30, 13);
+            this.lblPais.TabIndex = 15;
+            this.lblPais.Text = "Pais:";
+            // 
+            // cboPais
+            // 
+            this.cboPais.FormattingEnabled = true;
+            this.cboPais.Location = new System.Drawing.Point(510, 82);
+            this.cboPais.Name = "cboPais";
+            this.cboPais.Size = new System.Drawing.Size(121, 21);
+            this.cboPais.TabIndex = 16;
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(800, 490);
@@ -217,5 +238,7 @@
         private System.Windows.Forms.TextBox txtDni, txtNombre, txtApellidos, txtTelefono, txtEmail;
         private System.Windows.Forms.Panel panelFormulario;
         private System.Windows.Forms.DateTimePicker dtpFecha;
+        private System.Windows.Forms.Label lblPais;
+        private System.Windows.Forms.ComboBox cboPais;
     }
 }

@@ -80,7 +80,8 @@ https://localhost:7184/swagger
   "apellidos": "García López",
   "fechaNacimiento": "1990-05-15",
   "telefono": "612345678",
-  "email": "juan@email.com"
+  "email": "juan@email.com",
+  "pais": "España"
 }
 ```
 
@@ -94,9 +95,32 @@ Los datos se guardan en `Data/clientes.json` dentro del directorio de la API. Se
 El Desktop se conecta a la API en `https://localhost:7184`. **La API debe estar arrancada** para que el Desktop funcione correctamente.
 
 ### Funcionalidades
-- **Agregar clientes** — rellena el formulario y pulsa "Agregar"
+- **Agregar clientes** — rellena el formulario, selecciona el país y pulsa "Agregar"
 - **Eliminar clientes** — selecciona una fila de la tabla y pulsa "Eliminar"
 - **Importar clientes** — pulsa "Importar CSV/JSON" y selecciona un fichero de la carpeta `ejemplos/`
+
+### Validaciones por país
+
+El formulario incluye un selector de país que aplica validaciones específicas para DNI y teléfono:
+
+| País | Formato DNI | Formato Teléfono |
+|------|-------------|------------------|
+| 🇪🇸 España | 8 dígitos + 1 letra (ej: `12345678A`) | 9 dígitos, empieza por 6, 7, 8 o 9 (ej: `612345678`) |
+| 🇫🇷 Francia | 13 dígitos (ej: `1234567890123`) | 10 dígitos, empieza por 0 (ej: `0612345678`) |
+| 🇵🇹 Portugal | 9 dígitos (ej: `123456789`) | 9 dígitos, empieza por 9 (ej: `912345678`) |
+
+El email se valida de forma general para todos los países y se convierte automáticamente a minúsculas.
+
+### Ejemplos de clientes válidos
+
+**España:**
+- DNI: `12345678A` | Teléfono: `612345678` | Email: `juan@email.com`
+
+**Francia:**
+- DNI: `1234567890123` | Teléfono: `0612345678` | Email: `pierre@email.fr`
+
+**Portugal:**
+- DNI: `123456789` | Teléfono: `912345678` | Email: `joao@email.pt`
 
 ### Formatos de importación
 
@@ -104,8 +128,8 @@ Encontrarás ficheros de ejemplo en la carpeta `ejemplos/` del repositorio.
 
 **CSV** (con cabecera):
 ```
-dni,nombre,apellidos,fechaNacimiento,telefono,email
-12345678A,Juan,García,1990-05-15,612345678,juan@email.com
+dni,nombre,apellidos,fechaNacimiento,telefono,email,pais
+12345678A,Juan,García,1990-05-15,612345678,juan@email.com,España
 ```
 
 **JSON**:
@@ -117,7 +141,8 @@ dni,nombre,apellidos,fechaNacimiento,telefono,email
     "Apellidos": "García",
     "FechaNacimiento": "1990-05-15",
     "Telefono": "612345678",
-    "Email": "juan@email.com"
+    "Email": "juan@email.com",
+    "Pais": "España"
   }
 ]
 ```
@@ -137,7 +162,7 @@ dotnet test
 ```
 
 ### Tests incluidos
-- `ClienteValidatorTests` — validaciones de DNI, email, teléfono y fecha (5 tests)
+- `ClienteValidatorTests` — validaciones de DNI, email, teléfono y fecha por país (5 tests)
 - `ClienteServiceTests` — operaciones CRUD del servicio de la API (7 tests)
 
 ---
