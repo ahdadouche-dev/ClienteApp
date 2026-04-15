@@ -84,5 +84,21 @@ namespace ClientesApp.Api.Services
                 throw;
             }
         }
+
+        public (bool ok, List<string> errores) Actualizar(string dni, Cliente clienteActualizado)
+        {
+            var (esValido, errores) = ClientValidator.Validar(clienteActualizado);
+            if (!esValido) return (false, errores);
+
+            var clientes = ObtenerTodos();
+            var index = clientes.FindIndex(c =>
+                c.Dni.Equals(dni, StringComparison.OrdinalIgnoreCase));
+
+            if (index == -1) return (false, new List<string> { "No existe cliente con ese DNI." });
+
+            clientes[index] = clienteActualizado;
+            Guardar(clientes);
+            return (true, new List<string>());
+        }
     }
 }

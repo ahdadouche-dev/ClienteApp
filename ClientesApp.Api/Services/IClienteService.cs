@@ -8,5 +8,6 @@ namespace ClientesApp.Api.Services
         Cliente? ObtenerPorDni(string dni);
         (bool ok, List<string> errores) Crear(Cliente cliente);
         bool Eliminar(string dni);
+        (bool ok, List<string> errores) Actualizar(string dni, Cliente cliente);
     }
 }

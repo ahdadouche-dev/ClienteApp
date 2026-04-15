@@ -75,5 +75,22 @@ namespace ClientesApp.Api.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
+
+        [HttpPut("{dni}")]
+        public ActionResult Actualizar(string dni, [FromBody] Cliente clienteActualizado)
+        {
+            try
+            {
+                var (ok, errores) = _service.Actualizar(dni, clienteActualizado);
+                if (!ok && errores.Any()) return BadRequest(errores);
+                if (!ok) return NotFound($"No existe cliente con DNI {dni}");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar cliente");
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
     }
 }

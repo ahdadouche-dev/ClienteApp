@@ -49,6 +49,20 @@ namespace ClientesApp.Domain.Validators
             return fecha < DateTime.Now && fecha > new DateTime(1900, 1, 1);
         }
 
+        public static bool EsNombreValido(string nombre)
+        {
+            return !string.IsNullOrWhiteSpace(nombre) &&
+            nombre.Length >= 2 &&
+            Regex.IsMatch(nombre, @"^[\p{L}\s\-]+$");
+        }
+
+        public static bool EsApellidoValido(string apellidos)
+        {
+            return !string.IsNullOrWhiteSpace(apellidos) &&
+            apellidos.Length >= 2 &&
+            Regex.IsMatch(apellidos, @"^[\p{L}\s\-]+$");
+        }
+
         public static (bool esValido, List<string> errores) Validar(Cliente cliente)
         {
             var errores = new List<string>();
@@ -64,6 +78,12 @@ namespace ClientesApp.Domain.Validators
 
             if (!EsFechaValida(cliente.FechaNacimiento))
                 errores.Add("La fecha de nacimiento no es válida.");
+
+            if (!EsNombreValido(cliente.Nombre))
+                errores.Add("El nombre no es válido. No se permiten números ni caracteres especiales.");
+
+            if (!EsApellidoValido(cliente.Apellidos))
+                errores.Add("Los apellidos no son válidos. No se permiten números ni caracteres especiales.");
 
             return (!errores.Any(), errores);
         }

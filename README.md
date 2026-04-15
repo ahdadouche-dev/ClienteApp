@@ -70,6 +70,7 @@ https://localhost:7184/swagger
 | GET | `/clientes` | Lista todos los clientes |
 | GET | `/clientes/{dni}` | Obtiene un cliente por DNI |
 | POST | `/clientes` | Crea un nuevo cliente |
+| PUT | `/clientes/{dni}` | Actualiza un cliente existente |
 | DELETE | `/clientes/{dni}` | Elimina un cliente por DNI |
 
 ### Ejemplo POST `/clientes`
@@ -85,6 +86,27 @@ https://localhost:7184/swagger
 }
 ```
 
+### Ejemplo PUT `/clientes/12345678A`
+```json
+{
+  "dni": "12345678A",
+  "nombre": "Juan",
+  "apellidos": "García López",
+  "fechaNacimiento": "1990-05-15",
+  "telefono": "699887766",
+  "email": "juannuevo@email.com",
+  "pais": "España"
+}
+```
+
+### Validaciones
+Todas las operaciones de escritura (POST y PUT) validan los datos en el servidor:
+- **DNI** — formato según el país seleccionado
+- **Teléfono** — formato según el país seleccionado
+- **Email** — formato válido, se convierte automáticamente a minúsculas
+- **Nombre y Apellidos** — solo letras, mínimo 2 caracteres, sin números ni caracteres especiales
+- **Fecha de nacimiento** — debe ser anterior a la fecha actual
+
 ### Almacenamiento
 Los datos se guardan en `Data/clientes.json` dentro del directorio de la API. Se crea automáticamente si no existe. Si el fichero existe pero tiene contenido inválido, reemplaza su contenido con `[]`.
 
@@ -96,20 +118,17 @@ El Desktop se conecta a la API en `https://localhost:7184`. **La API debe estar 
 
 ### Funcionalidades
 - **Agregar clientes** — rellena el formulario, selecciona el país y pulsa "Agregar"
+- **Editar clientes** — selecciona una fila de la tabla, modifica los campos y pulsa "Guardar cambios"
 - **Eliminar clientes** — selecciona una fila de la tabla y pulsa "Eliminar"
 - **Importar clientes** — pulsa "Importar CSV/JSON" y selecciona un fichero de la carpeta `ejemplos/`
 
 ### Validaciones por país
-
-El formulario incluye un selector de país que aplica validaciones específicas para DNI y teléfono:
 
 | País | Formato DNI | Formato Teléfono |
 |------|-------------|------------------|
 | 🇪🇸 España | 8 dígitos + 1 letra (ej: `12345678A`) | 9 dígitos, empieza por 6, 7, 8 o 9 (ej: `612345678`) |
 | 🇫🇷 Francia | 13 dígitos (ej: `1234567890123`) | 10 dígitos, empieza por 0 (ej: `0612345678`) |
 | 🇵🇹 Portugal | 9 dígitos (ej: `123456789`) | 9 dígitos, empieza por 9 (ej: `912345678`) |
-
-El email se valida de forma general para todos los países y se convierte automáticamente a minúsculas.
 
 ### Ejemplos de clientes válidos
 
@@ -162,7 +181,7 @@ dotnet test
 ```
 
 ### Tests incluidos
-- `ClienteValidatorTests` — validaciones de DNI, email, teléfono y fecha por país (5 tests)
+- `ClienteValidatorTests` — validaciones de DNI, email, teléfono, nombre, apellidos y fecha por país (13 tests)
 - `ClienteServiceTests` — operaciones CRUD del servicio de la API (7 tests)
 
 ---

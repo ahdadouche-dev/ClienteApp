@@ -109,5 +109,40 @@ namespace ClientesApp.Desktop.Services
             var json = System.IO.File.ReadAllText(rutaOrigen);
             return JsonConvert.DeserializeObject<List<Cliente>>(json) ?? new List<Cliente>();
         }
+
+        public (bool ok, List<string> errores) ActualizarCliente(List<Cliente> clientes, string dni, Cliente actualizado)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(actualizado);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = _httpClient.PutAsync($"/clientes/{dni}", content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var cliente = clientes.Find(c =>
+                        c.Dni.Equals(dni, StringComparison.OrdinalIgnoreCase));
+                    if (cliente != null)
+                    {
+                        cliente.Nombre = actualizado.Nombre;
+                        cliente.Apellidos = actualizado.Apellidos;
+                        cliente.FechaNacimiento = actualizado.FechaNacimiento;
+                        cliente.Telefono = actualizado.Telefono;
+                        cliente.Email = actualizado.Email;
+                        cliente.Pais = actualizado.Pais;
+                    }
+                    return (true, new List<string>());
+                }
+
+                var errorJson = response.Content.ReadAsStringAsync().Result;
+                var errores = JsonConvert.DeserializeObject<List<string>>(errorJson)
+                              ?? new List<string> { errorJson };
+                return (false, errores);
+            }
+            catch (Exception ex)
+            {
+                return (false, new List<string> { ex.Message });
+            }
+        }
     }
 }

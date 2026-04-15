@@ -30,9 +30,10 @@
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.panelFormulario = new System.Windows.Forms.Panel();
-            this.dtpFecha = new System.Windows.Forms.DateTimePicker();
-            this.lblPais = new System.Windows.Forms.Label();
             this.cboPais = new System.Windows.Forms.ComboBox();
+            this.lblPais = new System.Windows.Forms.Label();
+            this.dtpFecha = new System.Windows.Forms.DateTimePicker();
+            this.btnCancelar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.panelFormulario.SuspendLayout();
             this.SuspendLayout();
@@ -46,10 +47,11 @@
             this.dgvClientes.ReadOnly = true;
             this.dgvClientes.Size = new System.Drawing.Size(760, 300);
             this.dgvClientes.TabIndex = 0;
+            this.dgvClientes.SelectionChanged += new System.EventHandler(this.dgvClientes_SelectionChanged);
             // 
             // btnImportar
             // 
-            this.btnImportar.Location = new System.Drawing.Point(220, 85);
+            this.btnImportar.Location = new System.Drawing.Point(317, 85);
             this.btnImportar.Name = "btnImportar";
             this.btnImportar.Size = new System.Drawing.Size(140, 23);
             this.btnImportar.TabIndex = 14;
@@ -166,6 +168,7 @@
             // 
             // panelFormulario
             // 
+            this.panelFormulario.Controls.Add(this.btnCancelar);
             this.panelFormulario.Controls.Add(this.cboPais);
             this.panelFormulario.Controls.Add(this.lblPais);
             this.panelFormulario.Controls.Add(this.lblDni);
@@ -188,12 +191,13 @@
             this.panelFormulario.Size = new System.Drawing.Size(760, 120);
             this.panelFormulario.TabIndex = 2;
             // 
-            // dtpFecha
+            // cboPais
             // 
-            this.dtpFecha.Location = new System.Drawing.Point(80, 42);
-            this.dtpFecha.Name = "dtpFecha";
-            this.dtpFecha.Size = new System.Drawing.Size(150, 20);
-            this.dtpFecha.TabIndex = 7;
+            this.cboPais.FormattingEnabled = true;
+            this.cboPais.Location = new System.Drawing.Point(510, 82);
+            this.cboPais.Name = "cboPais";
+            this.cboPais.Size = new System.Drawing.Size(121, 21);
+            this.cboPais.TabIndex = 16;
             // 
             // lblPais
             // 
@@ -204,13 +208,22 @@
             this.lblPais.TabIndex = 15;
             this.lblPais.Text = "Pais:";
             // 
-            // cboPais
+            // dtpFecha
             // 
-            this.cboPais.FormattingEnabled = true;
-            this.cboPais.Location = new System.Drawing.Point(510, 82);
-            this.cboPais.Name = "cboPais";
-            this.cboPais.Size = new System.Drawing.Size(121, 21);
-            this.cboPais.TabIndex = 16;
+            this.dtpFecha.Location = new System.Drawing.Point(80, 42);
+            this.dtpFecha.Name = "dtpFecha";
+            this.dtpFecha.Size = new System.Drawing.Size(150, 20);
+            this.dtpFecha.TabIndex = 7;
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.Location = new System.Drawing.Point(216, 85);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(83, 23);
+            this.btnCancelar.TabIndex = 17;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // MainForm
             // 
@@ -239,5 +252,6 @@
         private System.Windows.Forms.DateTimePicker dtpFecha;
         private System.Windows.Forms.Label lblPais;
         private System.Windows.Forms.ComboBox cboPais;
+        private System.Windows.Forms.Button btnCancelar;
     }
 }

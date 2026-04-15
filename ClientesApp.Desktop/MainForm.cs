@@ -13,6 +13,7 @@ namespace ClientesApp.Desktop
     {
         private readonly ClienteService _service;
         private List<Cliente> _clientes;
+        private string _dniEnEdicion = null;
 
         public MainForm()
         {
@@ -42,34 +43,66 @@ namespace ClientesApp.Desktop
         {
             try
             {
-                var nuevo = new Cliente
+                if (_dniEnEdicion != null)
                 {
-                    Dni = txtDni.Text.Trim(),
-                    Nombre = txtNombre.Text.Trim(),
-                    Apellidos = txtApellidos.Text.Trim(),
-                    FechaNacimiento = dtpFecha.Value,
-                    Telefono = txtTelefono.Text.Trim(),
-                    Email = txtEmail.Text.Trim().ToLower(),
-                    Pais = (Pais)cboPais.SelectedItem
-                };
+                    var actualizado = new Cliente
+                    {
+                        Dni = _dniEnEdicion,
+                        Nombre = txtNombre.Text.Trim(),
+                        Apellidos = txtApellidos.Text.Trim(),
+                        FechaNacimiento = dtpFecha.Value,
+                        Telefono = txtTelefono.Text.Trim(),
+                        Email = txtEmail.Text.Trim(),
+                        Pais = (Pais)cboPais.SelectedItem
+                    };
 
-                var (ok, errores) = _service.AgregarCliente(_clientes, nuevo);
+                    var (ok, errores) = _service.ActualizarCliente(_clientes, _dniEnEdicion, actualizado);
+                    if (!ok)
+                    {
+                        MessageBox.Show(string.Join("\n", errores), "Errores de validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
 
-                if (!ok)
-                {
-                    MessageBox.Show(string.Join("\n", errores), "Errores de validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    RefrescarGrid();
+                    LimpiarFormulario();
+                    SalirModoEdicion();
+                    MessageBox.Show("Cliente actualizado correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
+                else
+                {
+                    var nuevo = new Cliente
+                    {
+                        Dni = txtDni.Text.Trim(),
+                        Nombre = txtNombre.Text.Trim(),
+                        Apellidos = txtApellidos.Text.Trim(),
+                        FechaNacimiento = dtpFecha.Value,
+                        Telefono = txtTelefono.Text.Trim(),
+                        Email = txtEmail.Text.Trim().ToLower(),
+                        Pais = (Pais)cboPais.SelectedItem
+                    };
 
-                RefrescarGrid();
-                LimpiarFormulario();
-                MessageBox.Show("Cliente agregado correctamente.", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var (ok, errores) = _service.AgregarCliente(_clientes, nuevo);
+
+                    if (!ok)
+                    {
+                        MessageBox.Show(string.Join("\n", errores), "Errores de validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    RefrescarGrid();
+                    LimpiarFormulario();
+                    SalirModoEdicion();
+                    MessageBox.Show(_dniEnEdicion != null ? "Cliente actualizado correctamente." : "Cliente agregado correctamente.",
+                            "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al agregar cliente: {ex.Message}", "Error",
+                MessageBox.Show($"Error: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -183,6 +216,44 @@ namespace ClientesApp.Desktop
             txtTelefono.Clear();
             txtEmail.Clear();
             dtpFecha.Value = DateTime.Now;
+        }
+
+        private void dgvClientes_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvClientes.SelectedRows.Count == 0) return;
+
+            var row = dgvClientes.SelectedRows[0];
+            txtDni.Text = row.Cells["Dni"].Value?.ToString();
+            txtNombre.Text = row.Cells["Nombre"].Value?.ToString();
+            txtApellidos.Text = row.Cells["Apellidos"].Value?.ToString();
+            txtTelefono.Text = row.Cells["Telefono"].Value?.ToString();
+            txtEmail.Text = row.Cells["Email"].Value?.ToString();
+
+            if (DateTime.TryParse(row.Cells["FechaNacimiento"].Value?.ToString(), out var fecha))
+                dtpFecha.Value = fecha;
+
+            if (Enum.TryParse(row.Cells["Pais"].Value?.ToString(), out Pais pais))
+                cboPais.SelectedItem = pais;
+
+            // Activar modo edición
+            _dniEnEdicion = txtDni.Text;
+            txtDni.Enabled = false;
+            btnAgregar.Text = "Guardar cambios";
+            btnCancelar.Visible = true;
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            SalirModoEdicion();
+            LimpiarFormulario();
+        }
+
+        private void SalirModoEdicion()
+        {
+            _dniEnEdicion = null;
+            txtDni.Enabled = true;
+            btnAgregar.Text = "Agregar";
+            btnCancelar.Visible = false;
         }
     }
 }
