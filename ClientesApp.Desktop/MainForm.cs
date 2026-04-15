@@ -38,19 +38,6 @@ namespace ClientesApp.Desktop
             }
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                _service.GuardarClientes(_clientes);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al guardar clientes: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             try

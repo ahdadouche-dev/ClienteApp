@@ -220,7 +220,6 @@
             this.Controls.Add(this.panelFormulario);
             this.Name = "MainForm";
             this.Text = "Clientes App";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
             this.panelFormulario.ResumeLayout(false);

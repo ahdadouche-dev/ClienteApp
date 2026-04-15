@@ -80,8 +80,6 @@ namespace ClientesApp.Desktop.Services
             }
         }
 
-        public void GuardarClientes(List<Cliente> clientes) { } // La API gestiona la persistencia
-
         public List<Cliente> ImportarDesdeCsv(string rutaOrigen)
         {
             var clientes = new List<Cliente>();

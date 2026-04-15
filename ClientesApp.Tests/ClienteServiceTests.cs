@@ -46,7 +46,8 @@ namespace ClientesApp.Tests
                 Apellidos = "García",
                 FechaNacimiento = new DateTime(1990, 1, 1),
                 Telefono = "612345678",
-                Email = "juan@email.com"
+                Email = "juan@email.com",
+                Pais = Pais.España
             };
 
             var (ok, errores) = _service.Crear(cliente);
@@ -66,7 +67,8 @@ namespace ClientesApp.Tests
                 Apellidos = "García",
                 FechaNacimiento = new DateTime(1990, 1, 1),
                 Telefono = "612345678",
-                Email = "juan@email.com"
+                Email = "juan@email.com",
+                Pais = Pais.España
             };
 
             _service.Crear(cliente);
@@ -86,7 +88,8 @@ namespace ClientesApp.Tests
                 Apellidos = "García",
                 FechaNacimiento = new DateTime(1990, 1, 1),
                 Telefono = "612345678",
-                Email = "juan@email.com"
+                Email = "juan@email.com",
+                Pais = Pais.España
             };
 
             _service.Crear(cliente);
@@ -113,7 +116,8 @@ namespace ClientesApp.Tests
                 Apellidos = "García",
                 FechaNacimiento = new DateTime(1990, 1, 1),
                 Telefono = "612345678",
-                Email = "juan@email.com"
+                Email = "juan@email.com",
+                Pais = Pais.España
             };
 
             _service.Crear(cliente);
