@@ -26,7 +26,7 @@ namespace ClientesApp.Desktop
         {
             try
             {
-                cboPais.DataSource = Enum.GetValues(typeof(ClientesApp.Domain.Models.Pais));
+                cboPais.DataSource = Enum.GetValues(typeof(Pais));
                 cboPais.SelectedIndex = 0;
 
                 _clientes = _service.CargarClientes();
